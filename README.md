@@ -1,6 +1,6 @@
 # 2021_AdlerMDS_MethodComparisonZlog
 
-This is a RShiny based Web App for method comparison in the clinical laboratory. It uses standrd regression methods like linear regression, Deming-regression and Passing-Bablok-regression.
+This is a RShiny based RMarkdown file for method comparison in the clinical laboratory. It uses standrd regression methods like linear regression, Deming-regression and Passing-Bablok-regression.
 
 It´s currently only usable with a a standard format of input .csv-files.
 
