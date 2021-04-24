@@ -11,7 +11,7 @@ Here is the link to the "ready-to-use" RShiny-based Web-App: https://adlermds.sh
 You can run this WebApp on your local machine in a R Session using the following code:
 ```bash
 library(shiny)
-runGitHub("2021_AdlerMDS_RefLim_WebApp", "Bussard91", ref = "main")
+runGitHub("2021_AdlerMDS_MethodComparisonZlog", "Bussard91", ref = "main")
 ```
 
 The theoretical basis is published in this Article: https://www.degruyter.com/document/doi/10.1515/labmed-2017-0135/html
