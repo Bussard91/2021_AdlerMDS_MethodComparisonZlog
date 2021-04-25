@@ -10,6 +10,8 @@ The theoretical basis is published in this Article: https://www.degruyter.com/do
 
 Here is the link to the "ready-to-use" RShiny-based Web-App: https://adlermds.shinyapps.io/AdlerMDS_MethodComparisonZlog/
 
+In this repository we offer a demonstration data set too.
+
 You can run this WebApp on your local machine in a R Session using the following code:
 ```bash
 library(shiny)
