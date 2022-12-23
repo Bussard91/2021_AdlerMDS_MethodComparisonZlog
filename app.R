@@ -18,8 +18,8 @@ ui <- fluidPage(
   # navigation bar layout
   sidebarLayout(
     sidebarPanel(width = 2,
-                 fileInput("File", "Choose file:", multiple = FALSE, accept = c("text/csv", "text/comma-separated-values,text/plain",".csv")),
-                 radioButtons("Sep", "Column separator", choices = c(Komma = ",", Semikolon = ";"), selected = ";"),
+                 fileInput("File", "Choose file:", multiple = FALSE, accept = c("text/csv", "text/comma-separated-values,text/plain",".csv", ".xls", ".xlsx", ".ods")),
+                 # radioButtons("Sep", "Column separator", choices = c(Komma = ",", Semikolon = ";"), selected = ";"),      # not needed anymore (since rio is smart ;)
                  tags$hr(),
                  textInput("Method1", "Name of old method:", ""),
                  textInput("Method2", "Name of new method:", ""),
@@ -194,7 +194,7 @@ server <- function(input, output){
     req(input$File)
     tryCatch(
       {
-        df <- read.csv(input$File$datapath, header = T, sep = input$Sep)
+        df <- rio::import(input$File$datapath, header = T)
         df
       },
       error = function(e) {
@@ -207,7 +207,7 @@ server <- function(input, output){
     req(input$File)
     tryCatch(
       {
-        df <- read.csv(input$File$datapath, header = T, sep = input$Sep)
+        df <- rio::import(input$File$datapath, header = T)
         if (is.null(df)) return("The data frame is empty.")
         selectInput("Coldropold", "Select column for old method:", names(df))
       },
@@ -220,7 +220,7 @@ server <- function(input, output){
     req(input$File)
     tryCatch(
       {
-        df <- read.csv(input$File$datapath, header = T, sep = input$Sep)
+        df <- rio::import(input$File$datapath, header = T)
         if (is.null(df)) return("The data frame is empty.")
         selectInput("Coldropnew", "Select column for new method:", names(df))
       },
@@ -233,7 +233,7 @@ server <- function(input, output){
   output$RegPlot <- renderPlot({
     req(input$File)
     tryCatch({
-        df <- read.csv(input$File$datapath, header = T, sep = input$Sep)
+        df <- rio::import(input$File$datapath, header = T)
         MethodChoosed <- switch(input$Method, "Linear" = "WLinReg", "Deming" = "Deming", "Passing" = "PaBa")
         Model <- mcreg(df[,input$Coldropold], df[,input$Coldropnew], method.reg = MethodChoosed)
         xaxis <- paste(input$Name, "old method (", input$Unit, ")")
@@ -251,7 +251,7 @@ server <- function(input, output){
   output$CorCoeff <- renderPrint({
     req(input$File)
     tryCatch({
-      df <- read.csv(input$File$datapath, header = T, sep = input$Sep)
+      df <- rio::import(input$File$datapath, header = T)
       cor(df[,input$Coldropold], df[,input$Coldropnew])
     },
     error = function(e){
@@ -262,7 +262,7 @@ server <- function(input, output){
   output$CorTest <- renderPrint({
     req(input$File)
     tryCatch({
-      df <- read.csv(input$File$datapath, header = T, sep = input$Sep)
+      df <- rio::import(input$File$datapath, header = T)
       cor.test(df[,input$Coldropold], df[,input$Coldropnew])
     },
     error = function(e){
@@ -273,7 +273,7 @@ server <- function(input, output){
   output$DetCoeff <- renderPrint({
     req(input$File)
     tryCatch({
-      df <- read.csv(input$File$datapath, header = T, sep = input$Sep)
+      df <- rio::import(input$File$datapath, header = T)
       Deter <- cor(df[,input$Coldropold], df[,input$Coldropnew])
       Deter^2
     },
@@ -285,7 +285,7 @@ server <- function(input, output){
   output$DiffSumm <- renderPrint({
     req(input$File)
     tryCatch({
-      df <- read.csv(input$File$datapath, header = T, sep = input$Sep)
+      df <- rio::import(input$File$datapath, header = T)
       df$difference <- df[,input$Coldropnew] - df[,input$Coldropold]
       summary(df$difference)
     },
@@ -297,7 +297,7 @@ server <- function(input, output){
   output$VarCoeff <- renderPrint({
     req(input$File)
     tryCatch({
-      df <- read.csv(input$File$datapath, header = T, sep = input$Sep)
+      df <- rio::import(input$File$datapath, header = T)
       df$differenceperc <- ((df[,input$Coldropnew])*100)/df[,input$Coldropold]
       VC <- (sd(df$differenceperc)*100/mean(df$differenceperc))
       VC
@@ -310,7 +310,7 @@ server <- function(input, output){
   output$BlandPlot <- renderPlot({
     req(input$File)
     tryCatch({
-      df <- read.csv(input$File$datapath, header = T, sep = input$Sep)
+      df <- rio::import(input$File$datapath, header = T)
       MethodChoosed <- switch(input$Method, "Linear" = "WLinReg", "Deming" = "Deming", "Passing" = "PaBa")
       Model2 <- mcreg(df[,input$Coldropold], df[,input$Coldropnew], method.reg = MethodChoosed)
       title2 <- paste("Bland-Altman-Plot", input$Name)
@@ -326,7 +326,7 @@ server <- function(input, output){
   output$ZlogPlot <- renderPlot({
     req(input$File)
     tryCatch({
-      df <- read.csv(input$File$datapath, header = T, sep = input$Sep)
+      df <- rio::import(input$File$datapath, header = T)
       
       zlog.old <- function(x){
         zlogvalue.old <- (log(x) - (log(input$LL1) + log(input$UL1))/2) * (3.92 / (log(input$UL1) - log(input$LL1)))
@@ -360,7 +360,7 @@ server <- function(input, output){
   output$ZlogRegPlot <- renderPlot({
     req(input$File)
     tryCatch({
-      df <- read.csv(input$File$datapath, header = T, sep = input$Sep)
+      df <- rio::import(input$File$datapath, header = T)
       
       zlog.old <- function(x){
         zlogvalue.old <- (log(x) - (log(input$LL1) + log(input$UL1))/2) * (3.92 / (log(input$UL1) - log(input$LL1)))
