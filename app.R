@@ -1,9 +1,13 @@
 # Method comparison with zlog values - RShiny Web-App
 
 ## Packages
-library(shiny)
-library(shinythemes)
-library(mcr)
+if (!require("pacman")) install.packages("pacman"); library(pacman)
+pacman::p_load(here)                # I prefer this for easier file access
+
+pacman::p_load(shiny)
+pacman::p_load(shinythemes)
+pacman::p_load(ggplot2)             # shiny needs ggplot2
+pacman::p_load(mcr)
 
 ## User Interface
 
