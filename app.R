@@ -5,7 +5,6 @@ if (!require("pacman")) install.packages("pacman"); library(pacman)
 pacman::p_load(here)                # I prefer this for easier file access
 
 pacman::p_load(shiny)
-pacman::p_load(shinythemes)
 pacman::p_load(ggplot2)             # shiny needs ggplot2
 pacman::p_load(mcr)
 
@@ -13,8 +12,6 @@ pacman::p_load(mcr)
 
 ui <- fluidPage(
   h3("Adler Medical Data Science - Method comparison using zlog-values"),
-  # theme for style of the web app
-  theme = shinytheme("cosmo"),
   # navigation bar layout
   sidebarLayout(
     sidebarPanel(width = 2,
